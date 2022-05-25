@@ -1,0 +1,41 @@
+.modelInformation {
+    position: absolute;
+    left: 0px;
+    top: 100px;
+    width: 360px;
+    height: auto;
+    background-color: #282828;
+    border: 1px solid;
+    border-color: #240090;
+}
+
+.scene-info {
+    text-align: center;
+    color: aliceblue;
+    font-size: 18px;
+    padding: 8px;
+    border: 1px solid;
+    border-color: #240090;
+}
+
+.scene-title {
+    text-align: center;
+    color: aliceblue;
+    font-size: 14px;
+    padding: 8px;
+    border: 1px solid;
+    border-color: #240090;
+}
+
+.scene-author {
+    text-align: center;
+    color: aliceblue;
+    font-size: 14px;
+    padding: 8px;
+    border: 1px solid;
+    border-color: #240090;
+}
+
+.css-sghohy-MuiButtonBase-root-MuiButton-root {
+    width: 250px;
+}

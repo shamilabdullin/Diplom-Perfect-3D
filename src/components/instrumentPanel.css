@@ -1,0 +1,42 @@
+.instruments-close {
+    position: absolute;
+    right: 0;
+    top: 5px;
+    width: 24px;
+}
+
+.instruments {
+    background-color: #282828;
+    height: auto;
+    width: 300px;
+    position: absolute;
+    right: 0;
+    top: 200px;
+  }
+  
+  .instruments-title {
+    color: white;
+    text-align: center;
+    border: 1px solid;
+    border-color: #240090;
+    padding: 4px;
+  }
+  
+  .instruments-body {
+    position: relative;
+    width: auto;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid;
+    border-color: #240090;
+  }
+  
+  .instruments-body-item {
+    padding: 4px;
+    text-align: center;
+  }
+
+  .button-switching-vertex {
+    
+  }
