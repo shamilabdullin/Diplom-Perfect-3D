@@ -14,41 +14,36 @@ export function UniversalModel({ modelPath, coloredLines, showVertex }) {
   //const { nodes, materials } = useGLTF(modelPath)
 
   // для подсвечивания белыми линиями
+  const nodes = modelObject.nodes
   const group = new THREE.Group();
-
-
-
-  //const vnh = new VertexNormalsHelper( nodes.Cube, 0.01 );
+  group.name = 'lines'
+  const group1 = new THREE.Group();
+  group1.name = 'vertex'
 
   function addColoredLines() {
-    console.log(modelObject.nodes)
-    let vnh;
     const nodes = modelObject.nodes
     group.scale.multiplyScalar( 1 );
     modelObject.scene.add( group );
   
     group.updateMatrixWorld( true );
   
-    vnh = new VertexNormalsHelper( nodes.Cube, 0.01 );  // обозначение красными точками
-    modelObject.scene.add( vnh );
-  
-    // nodes.Cube.geometry.computeTangents()
+    nodes.Cube.geometry.computeTangents() //- было в раб версии
     const wireframe = new THREE.WireframeGeometry( nodes.Cube.geometry );
     let line = new THREE.LineSegments( wireframe );
     line.material.depthTest = false;
     line.material.opacity = 1;
     line.material.transparent = true;
     line.position.y = 1
-    // line.position.x = 1;
-    group.add( line ); 
+  
+    group.add( line );  
 
   }
 
   function removeColoredLines() {
-    console.log(modelObject)
-    const selectedObject = modelObject.scene.getObjectByName(group.name)
-    console.log(selectedObject)
-    modelObject.scene.remove(selectedObject)
+    const selectedObject = modelObject.scene.getObjectByName("lines")
+    if (selectedObject !== undefined) {
+      modelObject.scene.remove(selectedObject)
+    }
     console.log(modelObject)
   }
 
@@ -60,22 +55,43 @@ export function UniversalModel({ modelPath, coloredLines, showVertex }) {
     removeColoredLines()
   }
 
-  // function addVertex() {
-  //   modelObject.scene.add( vnh );
-  // }
+  function addVertex() {
+    console.log(modelObject.nodes)
+    let vnh;
+    const nodes = modelObject.nodes
+    //const group = new THREE.Group();
+    group1.scale.multiplyScalar( 1 );
+    modelObject.scene.add( group1 );
+  
+    group1.updateMatrixWorld( true );
+  
+    vnh = new VertexNormalsHelper( nodes.Cube, 0.01 );  // обозначение красными точками
+    vnh.name = 'vnh'
+    modelObject.scene.add( vnh );
+  
+    nodes.Cube.geometry.computeTangents()
 
-  // function removeVertex() {
-  //   const selectedObject = modelObject.scene.getObjectByName(vnh.name)
-  //   modelObject.scene.remove(selectedObject)
-  // }
+  }
 
-  // if( showVertex ) {
-  //   addVertex()
-  // } 
-  // else {
-  //   removeVertex()
-  //   removeVertex()
-  // }
+  function removeVertex() {
+
+    const selectedObject = modelObject.scene.getObjectByName('vertex')
+    const selectedObject1 = modelObject.scene.getObjectByName('vnh')
+    if (selectedObject !== undefined) {
+      modelObject.scene.remove(selectedObject)
+    }
+    if (selectedObject1 !== undefined) {
+      modelObject.scene.remove(selectedObject1)
+    }
+  }
+
+  if( showVertex ) {
+    addVertex()
+  } 
+  else {
+    removeVertex()
+    removeVertex()
+  }
 
   return (
     <group>

@@ -30,30 +30,30 @@ export default function App() {
   const [showFps, setShowFps] = useState(true)
   const [showVertex, setShowVertex] = useState(false)
 
-  const currentScene = useGLTF(currentModel) 
+  const modelObject = useGLTF(currentModel) 
 
   // эксперименты с различными режимами
 
-  // console.log(currentScene.nodes)
+  // console.log(modelObject.nodes)
   // let vnh;
-  // const nodes = currentScene.nodes
+  // const nodes = modelObject.nodes
   // const group = new THREE.Group();
 	// group.scale.multiplyScalar( 1 );
-  // currentScene.scene.add( group );
+  // modelObject.scene.add( group );
 
   // group.updateMatrixWorld( true );
 
   // vnh = new VertexNormalsHelper( nodes.Cube, 0.01 );  // обозначение красными точками
-  // currentScene.scene.add( vnh );
+  // modelObject.scene.add( vnh );
 
-  // // nodes.Cube.geometry.computeTangents()
+  // nodes.Cube.geometry.computeTangents()
   // const wireframe = new THREE.WireframeGeometry( nodes.Cube.geometry );
   // let line = new THREE.LineSegments( wireframe );
   // line.material.depthTest = false;
   // line.material.opacity = 1;
   // line.material.transparent = true;
   // line.position.y = 1
-  // // line.position.x = 1;
+
   // group.add( line );  // создание нового объекта с ребрами белого цвета
 
 // эксперименты с различными режимами
@@ -148,7 +148,7 @@ export default function App() {
     const exporter = new GLTFExporter();
 
     exporter.parse( 
-      currentScene.scene, 
+      modelObject.scene, 
       function ( gltf ) {
       console.log('gltf: ' + gltf)
       saveArrayBuffer(gltf, 'ThreejsScene.glb')
@@ -213,7 +213,7 @@ export default function App() {
               currentModel == 'Mac' ? 
                 <Mac coloredLines={coloredLines} edgesColor={currentColor} textured={textured} textureColorState={textureColorStateMac}/>
                 /*target && <TransformControls object={target} mode={mode} />*/ /* для перемещения объекта */ }
-            {coloredLines ?  <UniversalModel modelPath={currentModel} coloredLines={coloredLines}/> :  <UniversalModel modelPath={currentModel} coloredLines={coloredLines}/>}
+            <UniversalModel modelPath={currentModel} coloredLines={coloredLines} showVertex={showVertex}/>
           {grid ? 
             <Physics iterations={6}>
               <Plane rotation={[-Math.PI / 2, 0, 0]} />
@@ -250,7 +250,7 @@ export default function App() {
           showVertex={showVertex}
         />
 
-        {infoPanelOpen ? <ModelInformation currentScene={currentScene}/> : <></>}
+        {infoPanelOpen ? <ModelInformation currentScene={modelObject}/> : <></>}
         
         <Footer download={handleDownloadModel} displayInfo={handleInfoPanel} />
     </>
