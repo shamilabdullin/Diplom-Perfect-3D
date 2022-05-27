@@ -59,11 +59,11 @@ export default function InfoList({ materialNames, listName }) {
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <FixedSizeList
-          height={300}
+          height={200}
           width={360}
           itemSize={25}
           itemCount={itemsCount}
-          overscanCount={5}
+          overscanCount={1}
         >
         {renderRow}
       </FixedSizeList>

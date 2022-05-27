@@ -19,7 +19,7 @@ import { VertexNormalsHelper } from './instrumentsForView/VertexNormalsHelper'
 export default function App() {
 
   const [coloredLines, setColoredLines] = useState(false)
-  const [currentModel, setCurrentModel] = useState('headless.glb')
+  const [currentModel, setCurrentModel] = useState('mac-draco.glb')
   const [currentColor, setCurrentColor] = useState('red')
   const [debugged, setDebugged] = useState(false)
   const [textured, setTextured] = useState(false)
@@ -29,6 +29,7 @@ export default function App() {
   const [cube, setCube] = useState(true)
   const [showFps, setShowFps] = useState(true)
   const [showVertex, setShowVertex] = useState(false)
+  const [firstState, setFirstState] = useState(true)
 
   const modelObject = useGLTF(currentModel) 
 
@@ -100,6 +101,8 @@ export default function App() {
   function handleVertex() {
     setShowVertex((prev) => {return !prev})
   }
+
+
 
   // const textureColorStateShoe = proxy({
   //   current: null,
@@ -179,7 +182,8 @@ export default function App() {
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.right = '0px';
   stats.domElement.style.top = '0px';
-  stats.domElement.style.height = '200px';
+  stats.domElement.style.height = '50px';
+  stats.domElement.style.width = '50px'
   
   if(showFps) {
     document.body.appendChild( stats.dom );
@@ -213,7 +217,7 @@ export default function App() {
               currentModel == 'Mac' ? 
                 <Mac coloredLines={coloredLines} edgesColor={currentColor} textured={textured} textureColorState={textureColorStateMac}/>
                 /*target && <TransformControls object={target} mode={mode} />*/ /* для перемещения объекта */ }
-            <UniversalModel modelPath={currentModel} coloredLines={coloredLines} showVertex={showVertex}/>
+            <UniversalModel modelPath={currentModel} coloredLines={coloredLines} showVertex={showVertex} firstState={firstState} setFirstState={setFirstState}/>
           {grid ? 
             <Physics iterations={6}>
               <Plane rotation={[-Math.PI / 2, 0, 0]} />
