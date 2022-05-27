@@ -25,7 +25,9 @@ export default function InstrumentPanel({
     showFps,
     grid,
     showVertex,
-    handleVertex
+    handleVertex,
+    coloredEdges,
+    handleColoredEdges
 }) {
 
     const [instrumentPanelOpen, setinstrumentPanelOpen] = useState(true)
@@ -44,6 +46,10 @@ export default function InstrumentPanel({
     </div>
     {instrumentPanelOpen ? 
         <div className='instruments-body'>
+
+            <div className='instruments-body-title-1'>
+                Редактор модели
+            </div>
 
             <div className='instruments-body-item'>
                 { coloredLines ? 
@@ -67,12 +73,21 @@ export default function InstrumentPanel({
             </div>
 
             <div className='instruments-body-item'>
+                <div className='button-switching-coloredEdges'>
+                    {coloredEdges ?
+                        <Button variant='contained' onClick={handleColoredEdges}>Не подсвещать ребра</Button> :
+                        <Button variant='contained' onClick={handleColoredEdges}>Подсветить ребра</Button>   
+                    }
+                </div>
+            </div>
+
+            <div className='instruments-body-item'>
                 <div className='button-switching-textures button'>
-                <Button variant='contained' onClick={handleTextured}>Применить текстуры</Button>
+                <Button variant='contained' onClick={handleTextured}>Убрать текстуры</Button>
                 </div>
             </div>
         
-            <div className='instruments-body-item'>
+            {/* <div className='instruments-body-item'>
                 <div className='button-switching-model'>
                 <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label"></InputLabel>
@@ -90,6 +105,10 @@ export default function InstrumentPanel({
                     </Select>
                 </FormControl>
                 </div>
+            </div> */}
+
+            <div className='instruments-body-title-2'>
+                Редактор сцены
             </div>
         
             <div className='instruments-body-item'>

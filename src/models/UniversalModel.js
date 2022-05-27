@@ -1,21 +1,29 @@
 import { useGLTF } from '@react-three/drei'
+import { useState } from 'react'
 import React from 'react'
 import { Vector3 } from 'three'
 import { Edges } from "@react-three/drei"
+import { OrbitControls, TransformControls, useCursor } from '@react-three/drei'
 import * as THREE from 'three'
 import { VertexNormalsHelper } from '../instrumentsForView/VertexNormalsHelper'
+
 
 export function UniversalModel({ 
   modelPath, 
   coloredLines, 
   showVertex,
   firstState,
-  setFirstState
+  setFirstState,
+  useStore,
+  textured
  }) {
 
   const modelObject = useGLTF(modelPath)
-  // const vector3 = new Vector3({x:1, y:2, z:3})
-  // scene.scene.scale = vector3
+
+  // для перемещения и вращения
+  const setTarget = useStore((state) => state.setTarget)
+  const [hovered, setHovered] = useState(false)
+  useCursor(hovered)
 
   //const { nodes, materials } = useGLTF(modelPath)
 
@@ -36,11 +44,9 @@ export function UniversalModel({
   function addColoredLines() {  // метод для подсвечивания белыми линиями
     for(let i = 0; i < nodesArray.length; i++) {
       if(nodesArray[i].hasOwnProperty('geometry')) {
-        console.log(nodesArray[i].geometry)
         const group = new THREE.Group();
         group.name = `lines ${i}`
         linesGroupArray.push(group)
-        console.log(linesGroupArray)
         geometryNodes.push(nodesArray[i])
       }
     }
@@ -53,8 +59,6 @@ export function UniversalModel({
   
     //nodes.Cube.geometry.computeTangents() //- было в раб версии
     for(let i = 0; i < linesGroupArray.length; i++) {
-      console.log(geometryNodes)
-      console.log(modelObject)
       const wireframe = new THREE.WireframeGeometry( geometryNodes[i].geometry );
       let line = new THREE.LineSegments( wireframe );
       line.material.depthTest = false;
@@ -68,30 +72,23 @@ export function UniversalModel({
 
   function removeColoredLines() {  //  метод для удаления белых линий
     console.log('removeColoredLines() started')
-    console.log(nodesArray.length)
     for (let i = 0; i < nodesArray.length; i++) {
-      console.log('i')
       if (nodesArray[i].hasOwnProperty('geometry')) {
         const selectedObject = modelObject.scene.getObjectByName(`lines ${i}`)
-        console.log(selectedObject)
         if (selectedObject !== undefined) {
           modelObject.scene.remove(selectedObject)
         }
-        console.log(i)
-        console.log(modelObject)
       }
     }
   }
 
   if( coloredLines ) {
     addColoredLines() 
-    console.log(modelObject.scene)
     console.log('addColoredLines worked') 
   } 
   else if (!firstState) {
     removeColoredLines()
     removeColoredLines()
-    console.log(modelObject.scene)
     console.log('removeColoredLines worked')
   }
 
@@ -101,7 +98,6 @@ export function UniversalModel({
         const group1 = new THREE.Group();
         group1.name = `vertex ${i}`
         vertexGroupArray.push(group1)
-        console.log(vertexGroupArray)
         geometryNodes1.push(nodesArray[i])
       }
     }
@@ -169,7 +165,16 @@ export function UniversalModel({
       {/* <mesh geometry={nodes.touchbar.geometry}>
         <Edges />
       </mesh> */}
-      <primitive object={modelObject.scene} />
+      <mesh onClick={(e) => setTarget(e.object)} onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}>
+        <primitive object={modelObject.scene} />
+      </mesh>
+       {/* <group dispose={null}>
+      <mesh geometry={nodes.Cube.geometry}>
+        <meshStandardMaterial transparent />
+        <Edges />
+      </mesh>
+    </group> */}
+      
 
     </group>
   )

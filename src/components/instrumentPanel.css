@@ -13,30 +13,40 @@
     right: 0;
     top: 200px;
   }
-  
-  .instruments-title {
-    color: white;
-    text-align: center;
-    border: 1px solid;
-    border-color: #240090;
-    padding: 4px;
-  }
-  
-  .instruments-body {
-    position: relative;
-    width: auto;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid;
-    border-color: #240090;
-  }
-  
-  .instruments-body-item {
-    padding: 4px;
-    text-align: center;
-  }
 
-  .button-switching-vertex {
-    
-  }
+.instruments-title {
+  color: white;
+  text-align: center;
+  border: 1px solid;
+  border-color: #240090;
+  padding: 4px;
+}
+
+.instruments-body {
+  position: relative;
+  width: auto;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid;
+  border-color: #240090;
+  height: auto;
+}
+
+.instruments-body-item {
+  /* padding: 2px; */
+  text-align: center;
+  /* height: 25px; */
+}
+
+.instruments-body-title-1 {
+  padding-top: 10px;
+  color: white;
+  padding-bottom: 10px;
+}
+
+.instruments-body-title-2 {
+  padding-top: 10px;
+  color: white;
+  padding-bottom: 10px;
+}

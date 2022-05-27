@@ -29,7 +29,6 @@ export default function InfoList({ materialNames, listName }) {
 
   function renderRow(props) {
     const { index, style } = props;
-    console.log(props.index)
     return (
       <ListItem style={style} key={index} component="div" disablePadding>
         <ListItemButton>

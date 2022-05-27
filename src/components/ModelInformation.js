@@ -7,7 +7,7 @@ export function ModelInformation({ currentScene }) {
 
   const nodes = currentScene.nodes
   const generator = currentScene.asset.generator
-  const version = currentScene.asset.version
+  const sceneName = currentScene.scene.name
   const info = []
   const nodesArray = []
   const modelInfo = currentScene.asset.extras
@@ -47,7 +47,7 @@ export function ModelInformation({ currentScene }) {
           {generator}
         </div>
         <div className='scene-author'>
-          {version}
+          {sceneName}
         </div>
         <InfoList materialNames={info} listName={'materials'}/>
         <InfoList materialNames={nodesArray} listName={'nodes'}/>

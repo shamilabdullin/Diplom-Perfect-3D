@@ -15,14 +15,20 @@ import { Plane } from './components/Plane';
 import InstrumentPanel from './components/InstrumentPanel';
 import Stats from 'stats.js'
 import { VertexNormalsHelper } from './instrumentsForView/VertexNormalsHelper'
+import { Color } from 'three';
+import create from 'zustand'
+import { useControls } from 'leva'
+import EdgesColoredModel from './models/EdgesColoredModel';
+
+const useStore = create((set) => ({ target: null, setTarget: (target) => set({ target }) }))
 
 export default function App() {
 
   const [coloredLines, setColoredLines] = useState(false)
-  const [currentModel, setCurrentModel] = useState('mac-draco.glb')
+  const [currentModel, setCurrentModel] = useState('shoe-draco.glb')
   const [currentColor, setCurrentColor] = useState('red')
-  const [debugged, setDebugged] = useState(false)
-  const [textured, setTextured] = useState(false)
+  const [debugged, setDebugged] = useState(true)
+  const [textured, setTextured] = useState(true)
   const [background, setBackground] = useState(false)
   const [infoPanelOpen, setInfoPanelOpen] = useState(true)
   const [grid, setGrid] = useState(true)
@@ -30,9 +36,13 @@ export default function App() {
   const [showFps, setShowFps] = useState(true)
   const [showVertex, setShowVertex] = useState(false)
   const [firstState, setFirstState] = useState(true)
+  const [coloredEdges, setColoredEdges] = useState(false)
 
   const modelObject = useGLTF(currentModel) 
 
+  const { target, setTarget } = useStore()
+  const { mode } = useControls({ mode: { value: 'translate', options: ['translate', 'rotate', 'scale'] } })
+  //modelObject.nodes.shoe_1.material.roughness = 0
   // эксперименты с различными режимами
 
   // console.log(modelObject.nodes)
@@ -100,6 +110,10 @@ export default function App() {
 
   function handleVertex() {
     setShowVertex((prev) => {return !prev})
+  }
+
+  function handleColoredEdges() {
+    setColoredEdges((prev) => {return !prev})
   }
 
 
@@ -207,7 +221,8 @@ export default function App() {
 
   return (
     <>
-      <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 0, 5], fov:50}}>
+      <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 0, 5], fov:50}} onPointerMissed={() => setTarget(null)}>
+        {/* <color attach="background" args={['green']} /> */}
         <ambientLight intensity={0.7} />
         <spotLight intensity={0.5} angle={0.1} penumbra={1} position={[10, 15, 10]} castShadow />
         
@@ -217,7 +232,19 @@ export default function App() {
               currentModel == 'Mac' ? 
                 <Mac coloredLines={coloredLines} edgesColor={currentColor} textured={textured} textureColorState={textureColorStateMac}/>
                 /*target && <TransformControls object={target} mode={mode} />*/ /* для перемещения объекта */ }
-            <UniversalModel modelPath={currentModel} coloredLines={coloredLines} showVertex={showVertex} firstState={firstState} setFirstState={setFirstState}/>
+            {coloredEdges ? <EdgesColoredModel modelObject={modelObject} /> : 
+              <UniversalModel 
+                modelPath={currentModel} 
+                coloredLines={coloredLines} 
+                showVertex={showVertex} 
+                firstState={firstState} 
+                setFirstState={setFirstState} 
+                useStore={useStore}
+                textured={textured}
+              />
+            }
+            
+            {target && <TransformControls object={target} mode={mode} />}
           {grid ? 
             <Physics iterations={6}>
               <Plane rotation={[-Math.PI / 2, 0, 0]} />
@@ -228,7 +255,7 @@ export default function App() {
           <ContactShadows rotation-x={Math.PI / 2} position={[0, -0.8, 0]} opacity={0.25} width={10} height={10} blur={1.5} far={0.8} />
           {background ? <Portals /> : <></>}
         </Suspense>
-        <OrbitControls />
+        <OrbitControls  makeDefault/>
         {cube ? <Viewcube /> : <></>}
         {/* <OrbitControls minPolarAngle={Math.PI / 2} maxPolarAngle={Math.PI / 2} enableZoom={false} enablePan={false} /> */}
       </Canvas>
@@ -252,6 +279,8 @@ export default function App() {
           showFps={showFps}
           grid={grid}
           showVertex={showVertex}
+          coloredEdges={coloredEdges}
+          handleColoredEdges={handleColoredEdges}
         />
 
         {infoPanelOpen ? <ModelInformation currentScene={modelObject}/> : <></>}
