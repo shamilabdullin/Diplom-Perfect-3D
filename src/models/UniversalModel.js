@@ -165,7 +165,7 @@ export function UniversalModel({
       {/* <mesh geometry={nodes.touchbar.geometry}>
         <Edges />
       </mesh> */}
-      <mesh onClick={(e) => setTarget(e.object)} onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}>
+      <mesh onClick={(e) => setTarget(e.object)} onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}> {/* onClick={(e) => setTarget(e.object)} onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)} тут баг!*/}
         <primitive object={modelObject.scene} />
       </mesh>
        {/* <group dispose={null}>

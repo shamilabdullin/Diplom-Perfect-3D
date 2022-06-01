@@ -3,7 +3,7 @@ import './modelInformation.css'
 import InfoList from './InfoList'
 import * as THREE from 'three'
 
-export function ModelInformation({ currentScene }) {
+export function ModelInformation({ currentScene, setNode }) {
 
   const nodes = currentScene.nodes
   const generator = currentScene.asset.generator
@@ -49,8 +49,8 @@ export function ModelInformation({ currentScene }) {
         <div className='scene-author'>
           {sceneName}
         </div>
-        <InfoList materialNames={info} listName={'materials'}/>
-        <InfoList materialNames={nodesArray} listName={'nodes'}/>
+        <InfoList materialNames={info} listName={'materials'} setNode={setNode}/>
+        <InfoList materialNames={nodesArray} listName={'nodes'} setNode={setNode}/>
     </div>
   )
 }

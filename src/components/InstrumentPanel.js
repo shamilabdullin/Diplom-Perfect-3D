@@ -55,7 +55,7 @@ export default function InstrumentPanel({
                 { coloredLines ? 
                 <div className='button-coloring-edges'>
                     <Button variant='contained' onClick={handleColoredLines}>Не подсвещать текстуры</Button> 
-                    <ColorSwitcher color={currentColor} colorSwitcher={handleCurrentColor}/>
+                    {/* <ColorSwitcher color={currentColor} colorSwitcher={handleCurrentColor}/> */}
                 </div> : 
                 <div className='button-coloring-edges'>
                     <Button variant='contained' onClick={handleColoredLines}>Подсветить текстуры</Button>

@@ -25,7 +25,7 @@ const useStore = create((set) => ({ target: null, setTarget: (target) => set({ t
 export default function App() {
 
   const [coloredLines, setColoredLines] = useState(false)
-  const [currentModel, setCurrentModel] = useState('shoe-draco.glb')
+  const [currentModel, setCurrentModel] = useState('mac-draco.glb')
   const [currentColor, setCurrentColor] = useState('red')
   const [debugged, setDebugged] = useState(true)
   const [textured, setTextured] = useState(true)
@@ -37,11 +37,14 @@ export default function App() {
   const [showVertex, setShowVertex] = useState(false)
   const [firstState, setFirstState] = useState(true)
   const [coloredEdges, setColoredEdges] = useState(false)
+  const [node, setNode] = useState('')
 
   const modelObject = useGLTF(currentModel) 
 
+  // для перемещения
   const { target, setTarget } = useStore()
   const { mode } = useControls({ mode: { value: 'translate', options: ['translate', 'rotate', 'scale'] } })
+
   //modelObject.nodes.shoe_1.material.roughness = 0
   // эксперименты с различными режимами
 
@@ -217,12 +220,12 @@ export default function App() {
   }
   requestAnimationFrame( animate );
 
-
+  console.log(node)
 
   return (
     <>
       <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 0, 5], fov:50}} onPointerMissed={() => setTarget(null)}>
-        {/* <color attach="background" args={['green']} /> */}
+        {/* <color attach="background" args={['#333333']} /> */}
         <ambientLight intensity={0.7} />
         <spotLight intensity={0.5} angle={0.1} penumbra={1} position={[10, 15, 10]} castShadow />
         
@@ -243,6 +246,8 @@ export default function App() {
                 textured={textured}
               />
             }
+
+            {/* {node !== '' ? <EdgesColoredModel /> : <></>} */}
             
             {target && <TransformControls object={target} mode={mode} />}
           {grid ? 
@@ -283,7 +288,7 @@ export default function App() {
           handleColoredEdges={handleColoredEdges}
         />
 
-        {infoPanelOpen ? <ModelInformation currentScene={modelObject}/> : <></>}
+        {infoPanelOpen ? <ModelInformation currentScene={modelObject} setNode={setNode}/> : <></>}
         
         <Footer download={handleDownloadModel} displayInfo={handleInfoPanel} />
     </>

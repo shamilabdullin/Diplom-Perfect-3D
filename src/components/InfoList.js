@@ -18,7 +18,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import './InfoList.css'
 
-export default function InfoList({ materialNames, listName }) {
+export default function InfoList({ materialNames, listName, setNode }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClick = () => {
@@ -29,9 +29,15 @@ export default function InfoList({ materialNames, listName }) {
 
   function renderRow(props) {
     const { index, style } = props;
+
+    function chooseNode() {
+      //console.log(materialNames[index])
+      setNode(materialNames[index])
+    }
+
     return (
       <ListItem style={style} key={index} component="div" disablePadding>
-        <ListItemButton>
+        <ListItemButton onClick={() => chooseNode()}>
           <ListItemText primary={materialNames[index]} />
         </ListItemButton>
       </ListItem>
