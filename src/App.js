@@ -1,76 +1,91 @@
 import './App.css';
 import { Suspense, useRef, useState, useEffect } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { ContactShadows, Environment, useGLTF, OrbitControls, Edges, TransformControls } from "@react-three/drei"
+import { ContactShadows, Environment, useGLTF, OrbitControls, Edges, TransformControls, useDepthBuffer } from "@react-three/drei"
 import { Debug, Physics } from '@react-three/cannon'
-import { UniversalModel } from './models/UniversalModel';
+import { UniversalModel } from './instrumentsForModel/UniversalModel';
 import * as THREE from 'three'
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 
-import { Viewcube } from './instrumentsForView/Viewcube';
-import { Portals } from './instrumentsForView/BackgroundHouse';
-import { Footer } from './components/Footer';
-import { ModelInformation } from './components/ModelInformation';
-import { Plane } from './components/Plane';
-import InstrumentPanel from './components/InstrumentPanel';
+import { Viewcube } from './instrumentsForScene/Viewcube';
+import { Portals } from './instrumentsForScene/BackgroundHouse';
+import { Footer } from './uiComponents/Footer';
+import { ModelInformation } from './uiComponents/ModelInformation';
+import { Plane } from './instrumentsForScene/Plane';
+import InstrumentPanel from './uiComponents/InstrumentPanel';
 import Stats from 'stats.js'
-import { VertexNormalsHelper } from './instrumentsForView/VertexNormalsHelper'
-import { Color } from 'three';
 import create from 'zustand'
 import { useControls } from 'leva'
-import EdgesColoredModel from './models/EdgesColoredModel';
+import EdgesColoredModel from './instrumentsForModel/EdgesColoredModel';
+import VertexedModel from './instrumentsForModel/VertexedModel';
+import UnTexturedModel from './instrumentsForModel/UnTexturedModel';
+import { InsideColoredLight } from './instrumentsForScene/InsideColoredLight'
+import { proxy, useSnapshot } from "valtio"
+import { HexColorPicker } from "react-colorful"
+import { EdgesColoredNode } from './instrumentsForModel/EdgesColoredNode'
+import GlassModel from './instrumentsForModel/GlassModel';
+import { TestModel } from './testModels/TestModel';
 
 const useStore = create((set) => ({ target: null, setTarget: (target) => set({ target }) }))
 
 export default function App() {
 
+  const [modelInformation, setModelInformation] = useState('')
   const [coloredLines, setColoredLines] = useState(false)
-  const [currentModel, setCurrentModel] = useState('mac-draco.glb')
+  const [currentModel, setCurrentModel] = useState('shoe-draco.glb')
   const [currentColor, setCurrentColor] = useState('red')
   const [debugged, setDebugged] = useState(true)
   const [textured, setTextured] = useState(true)
+  const [texturedSwitched, setTexturedSwitched] = useState(false)
   const [background, setBackground] = useState(false)
   const [infoPanelOpen, setInfoPanelOpen] = useState(true)
   const [grid, setGrid] = useState(true)
   const [cube, setCube] = useState(true)
   const [showFps, setShowFps] = useState(true)
   const [showVertex, setShowVertex] = useState(false)
+  const [showVertexSwitched, setShowVertexSwitched] = useState(false)
   const [firstState, setFirstState] = useState(true)
   const [coloredEdges, setColoredEdges] = useState(false)
   const [node, setNode] = useState('')
+  const [firstScene, setFirstScene] = useState(true) // для сохранения данных о начальной сцене в localstorage
+  const [light, setLight] = useState(false)
+  const [showModelInstruments, setShowModelInstruments] = useState(false)
+  const [modelObject, setModelObject] = useState('shoe-draco.glb')
+  const [loader, setLoader] = useState(false)  //надо true при использовании сетевого запроса
 
-  const modelObject = useGLTF(currentModel) 
+  const modelPath = 'http://VM2205078023.vds.ru:8080/api/instruments/models/model--7b97160b-9c79-47a4-ae03-d373814424e4'
 
-  // для перемещения
+  // useEffect(() => {  //  сетевой запрос
+  //   fetch(modelPath)
+  //     .then(response => response.json())
+  //     .then(model => {
+  //       console.log(model)
+  //       setModelObject(model.modelUrl)
+  //       setLoader(false)
+  //     })
+  // }, []
+  // )
+
+  // для перемещения объекта
   const { target, setTarget } = useStore()
   const { mode } = useControls({ mode: { value: 'translate', options: ['translate', 'rotate', 'scale'] } })
 
-  //modelObject.nodes.shoe_1.material.roughness = 0
-  // эксперименты с различными режимами
+  if (firstScene) {
+    const materials = []
+    // const nodesArray = Object.values(modelObject.nodes)  // для сохранения матриалов в local storage 
 
-  // console.log(modelObject.nodes)
-  // let vnh;
-  // const nodes = modelObject.nodes
-  // const group = new THREE.Group();
-	// group.scale.multiplyScalar( 1 );
-  // modelObject.scene.add( group );
-
-  // group.updateMatrixWorld( true );
-
-  // vnh = new VertexNormalsHelper( nodes.Cube, 0.01 );  // обозначение красными точками
-  // modelObject.scene.add( vnh );
-
-  // nodes.Cube.geometry.computeTangents()
-  // const wireframe = new THREE.WireframeGeometry( nodes.Cube.geometry );
-  // let line = new THREE.LineSegments( wireframe );
-  // line.material.depthTest = false;
-  // line.material.opacity = 1;
-  // line.material.transparent = true;
-  // line.position.y = 1
-
-  // group.add( line );  // создание нового объекта с ребрами белого цвета
-
-// эксперименты с различными режимами
+    // for(let i = 0; i < nodesArray.length; i++) {
+    //   if(nodesArray[i].hasOwnProperty('material')) {
+    //     //const strObj = JSON.stringify(nodesArray[i].material)
+    //     materials.push(nodesArray[i])
+    //   }
+    // }
+    // const q = modelObject.nodes.nodesArray[0]
+    // const stigifiedMaterials = JSON.stringify(q) // const stigifiedMaterials = JSON.stringify(materials)
+    // localStorage.setItem('materials', stigifiedMaterials)
+    // const material1 = JSON.parse(localStorage.getItem('materials'))
+    // console.log(material1)
+  }
 
   function handleCurrentModel(event) {
     console.log(event.target.value)
@@ -119,50 +134,13 @@ export default function App() {
     setColoredEdges((prev) => {return !prev})
   }
 
+  function handleLight() {
+    setLight((prev) => {return !prev})
+  }
 
-
-  // const textureColorStateShoe = proxy({
-  //   current: null,
-  //   items: {
-  //     laces: "#ffffff",
-  //     mesh: "#ffffff",
-  //     caps: "#ffffff",
-  //     inner: "#ffffff",
-  //     sole1: "#ffffff",
-  //     stripes: "#ffffff",
-  //     band: "#ffffff",
-  //     patch: "#ffffff",
-  //   },
-  // })
-
-  // const textureColorStateMac = proxy({
-  //   current: null,
-  //   items: {
-  //     keyboard: "#222555",
-  //     touchbar: "#777777",
-  //     body: "#111",
-  //     audio: "#999",
-  //     screen1: "#123",
-  //     screen2: "#345",
-  //     screen3: "#567",
-  //   },
-  // })
-
-  // function Picker() {
-  
-  //   const snap = useSnapshot(textureColorStateShoe)
-  
-  //   return (
-  //     <div style={{ display: snap.current ? "block" : "none" }}>
-  //       <HexColorPicker color={snap.items[snap.current]} className="picker"
-  //         onChange={(color) => (textureColorStateShoe.items[snap.current] = color)} 
-  //       />
-  //       <div className="article">
-  //         <h3>{snap.current}</h3>
-  //       </div>
-  //     </div>
-  //   )
-  // }
+  function handleModelInstruments() {
+    setShowModelInstruments((prev) => {return !prev})
+  }
 
   function handleDownloadModel(){
     const exporter = new GLTFExporter();
@@ -208,63 +186,81 @@ export default function App() {
   } else stats.end()
 
   function animate() {
-
     stats.begin();
-
     // monitored code goes here
-
     stats.end();
-
     requestAnimationFrame( animate );
-
   }
-  requestAnimationFrame( animate );
 
-  console.log(node)
+  requestAnimationFrame( animate );
 
   return (
     <>
-      <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 0, 5], fov:50}} onPointerMissed={() => setTarget(null)}>
-        {/* <color attach="background" args={['#333333']} /> */}
-        <ambientLight intensity={0.7} />
-        <spotLight intensity={0.5} angle={0.1} penumbra={1} position={[10, 15, 10]} castShadow />
+      <Canvas 
+        shadows dpr={[1, 2]} 
+        camera={{ position: [0, 0, 5], fov:50}} 
+        onPointerMissed={() => setTarget(null)}
+      >
+
         
+        {light ? <color attach="background" args={['#202020']} /> : 
+          <color attach="background" args={['#ffffff']} />
+        }
+
         <Suspense fallback={null}>
-            {/* {currentModel == 'Shoe' ? 
-              <Shoe circled={coloredLines} edgesColor={currentColor} textureColorState={textureColorStateShoe} useStore={useStore}/> : 
-              currentModel == 'Mac' ? 
-                <Mac coloredLines={coloredLines} edgesColor={currentColor} textured={textured} textureColorState={textureColorStateMac}/>
-                /*target && <TransformControls object={target} mode={mode} />*/ /* для перемещения объекта */ }
-            {coloredEdges ? <EdgesColoredModel modelObject={modelObject} /> : 
+            {light ?  <InsideColoredLight /> : <></>}
+            {loader ? <></> :
+              coloredEdges ? <EdgesColoredModel modelObject={modelObject} /> : 
+              showVertex ? <VertexedModel 
+                modelPath={modelObject} 
+                setFirstState={setFirstState} 
+                setShowVertexSwitched={setShowVertexSwitched}/> :
+              !textured ? <UnTexturedModel 
+                modelObject={modelObject} 
+                setTexturedSwitched={setTexturedSwitched} 
+                setFirstScene={setFirstScene}/> :
+              showModelInstruments ? <GlassModel modelObject={modelObject}/> : 
               <UniversalModel 
-                modelPath={currentModel} 
+                modelPath={modelObject} 
                 coloredLines={coloredLines} 
                 showVertex={showVertex} 
+                showVertexSwitched={showVertexSwitched}
                 firstState={firstState} 
                 setFirstState={setFirstState} 
                 useStore={useStore}
                 textured={textured}
+                texturedSwitched={texturedSwitched}
               />
             }
 
-            {/* {node !== '' ? <EdgesColoredModel /> : <></>} */}
+            {node !== '' ? <EdgesColoredNode 
+              node={node} 
+              modelObject={modelObject}/> : <></>
+            }
             
             {target && <TransformControls object={target} mode={mode} />}
-          {grid ? 
-            <Physics iterations={6}>
-              <Plane rotation={[-Math.PI / 2, 0, 0]} />
-            </Physics>  :
-            <></>
-          }
+            {grid ? 
+              <Physics iterations={6}>
+                <Plane rotation={[-Math.PI / 2, 0, 0]} />
+              </Physics>  :
+              <></>
+            }
           <Environment preset="sunset" />
-          <ContactShadows rotation-x={Math.PI / 2} position={[0, -0.8, 0]} opacity={0.25} width={10} height={10} blur={1.5} far={0.8} />
+          <ContactShadows 
+            rotation-x={Math.PI / 2} 
+            position={[0, -0.8, 0]} 
+            opacity={0.25} 
+            width={10} 
+            height={10} 
+            blur={1.5} 
+            far={0.8} 
+          />
           {background ? <Portals /> : <></>}
         </Suspense>
         <OrbitControls  makeDefault/>
         {cube ? <Viewcube /> : <></>}
-        {/* <OrbitControls minPolarAngle={Math.PI / 2} maxPolarAngle={Math.PI / 2} enableZoom={false} enablePan={false} /> */}
+        
       </Canvas>
-      {/* <Picker /> */}
         
         <InstrumentPanel 
           coloredLines={coloredLines} 
@@ -286,9 +282,17 @@ export default function App() {
           showVertex={showVertex}
           coloredEdges={coloredEdges}
           handleColoredEdges={handleColoredEdges}
+          textured={textured}
+          light={light}
+          handleLight={handleLight}
+          handleModelInstruments={handleModelInstruments}
+          showModelInstruments={showModelInstruments}
         />
 
-        {infoPanelOpen ? <ModelInformation currentScene={modelObject} setNode={setNode}/> : <></>}
+        {infoPanelOpen ? <ModelInformation 
+          currentScene={modelObject} 
+          setNode={setNode}/> : <></>
+        }
         
         <Footer download={handleDownloadModel} displayInfo={handleInfoPanel} />
     </>
