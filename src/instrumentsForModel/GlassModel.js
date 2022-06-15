@@ -2,9 +2,10 @@ import React from 'react'
 import { useControls } from 'leva'
 import { useGLTF } from '@react-three/drei'
 
-export default function GlassModel({ modelObject }) {
+export default function GlassModel({ modelObject, setChangedObject }) {
 
     const model = useGLTF(modelObject)
+    setChangedObject(model)
     const nodes = model.nodes
     const nodesArray = Object.values(nodes) // массив из всех нодов объекта
     const geometryNodesArray = [] // массив из всех нодов со свойством geometry
@@ -15,6 +16,8 @@ export default function GlassModel({ modelObject }) {
           // nodesScales.push(nodesArray[i].scale)
         }
     }
+
+    console.log(model)
 
     const materialProps = useControls({
         thickness: { value: 5, min: 0, max: 20 },

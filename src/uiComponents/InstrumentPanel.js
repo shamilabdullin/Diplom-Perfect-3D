@@ -99,7 +99,7 @@ export default function InstrumentPanel({
                 </div>
             </div>
 
-            <div className='instruments-body-item'>
+            {/* <div className='instruments-body-item'>
                 <div className='button-switching-textures button'>
                     {textured ? 
                         <Button variant='contained' onClick={handleTextured}>
@@ -110,7 +110,7 @@ export default function InstrumentPanel({
                         </Button>
                     }
                 </div>
-            </div>
+            </div> */}
 
             <div className='instruments-body-item'>
                 <div className='button-switching-modelInstruments button'>

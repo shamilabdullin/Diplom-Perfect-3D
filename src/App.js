@@ -51,21 +51,33 @@ export default function App() {
   const [light, setLight] = useState(false)
   const [showModelInstruments, setShowModelInstruments] = useState(false)
   const [modelObject, setModelObject] = useState('shoe-draco.glb')
-  const [loader, setLoader] = useState(false)  //надо true при использовании сетевого запроса
+  const [loader, setLoader] = useState(true)  //надо true при использовании сетевого запроса
+  const [changedObject, setChangedObject] = useState('')
 
-  const modelPath = 'http://VM2205078023.vds.ru:8080/api/instruments/models/model--7b97160b-9c79-47a4-ae03-d373814424e4'
+  const URL = 'http://VM2205078023.vds.ru:8080/api/instruments/models/model--' // 'http://VM2205078023.vds.ru:8080/api/instruments/models/model--7b97160b-9c79-47a4-ae03-d373814424e4'
+  const generatedName = '7b97160b-9c79-47a4-ae03-d373814424e4'
+  const modelPath = URL + generatedName
 
   // useEffect(() => {  //  сетевой запрос
-  //   fetch(modelPath)
+  //   fetch('http://VM2205078023.vds.ru:8080/api/instruments/models')
   //     .then(response => response.json())
   //     .then(model => {
   //       console.log(model)
-  //       setModelObject(model.modelUrl)
-  //       setLoader(false)
   //     })
   // }, []
   // )
 
+  useEffect(() => {  //  сетевой запрос
+    fetch(modelPath)
+      .then(response => response.json())
+      .then(model => {
+        console.log(model)
+        setModelObject(model.modelUrl)
+        setLoader(false)
+      })
+  }, []
+  )
+  const gltfObject = useGLTF(modelObject)
   // для перемещения объекта
   const { target, setTarget } = useStore()
   const { mode } = useControls({ mode: { value: 'translate', options: ['translate', 'rotate', 'scale'] } })
@@ -146,7 +158,7 @@ export default function App() {
     const exporter = new GLTFExporter();
 
     exporter.parse( 
-      modelObject.scene, 
+      gltfObject.scene,//  gltfObject.scene, 
       function ( gltf ) {
       console.log('gltf: ' + gltf)
       saveArrayBuffer(gltf, 'ThreejsScene.glb')
@@ -219,7 +231,7 @@ export default function App() {
                 modelObject={modelObject} 
                 setTexturedSwitched={setTexturedSwitched} 
                 setFirstScene={setFirstScene}/> :
-              showModelInstruments ? <GlassModel modelObject={modelObject}/> : 
+              showModelInstruments ? <GlassModel modelObject={modelObject} setChangedObject={setChangedObject}/> : 
               <UniversalModel 
                 modelPath={modelObject} 
                 coloredLines={coloredLines} 

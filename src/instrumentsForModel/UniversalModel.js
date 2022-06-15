@@ -17,7 +17,7 @@ export function UniversalModel({  //  отображение модели по �
   showVertexSwitched,
   // firstModelObject,
   texturedSwitched,
- }) {
+}) {
   const modelObject = useGLTF(modelPath)
 
   // для перемещения и вращения
