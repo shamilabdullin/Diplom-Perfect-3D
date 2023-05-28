@@ -1,22 +1,22 @@
-import React from 'react'
-import ListSubheader from '@mui/material/ListSubheader';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import SendIcon from '@mui/icons-material/Send';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import StarBorder from '@mui/icons-material/StarBorder';
-import { ListItem } from '@mui/material';
-import { InfoListItems } from './InfoListItems';
-import { Icon } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
-import './InfoList.css'
+import React from "react";
+import ListSubheader from "@mui/material/ListSubheader";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Collapse from "@mui/material/Collapse";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import DraftsIcon from "@mui/icons-material/Drafts";
+import SendIcon from "@mui/icons-material/Send";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import StarBorder from "@mui/icons-material/StarBorder";
+import { ListItem } from "@mui/material";
+import { InfoListItems } from "./InfoListItems";
+import { Icon } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { FixedSizeList, ListChildComponentProps } from "react-window";
+import "./InfoList.css";
 
 export default function InfoList({ materialNames, listName, setNode }) {
   const [open, setOpen] = React.useState(false);
@@ -25,14 +25,15 @@ export default function InfoList({ materialNames, listName, setNode }) {
     setOpen(!open);
   };
 
-  const itemsCount = materialNames.length
+  const itemsCount = materialNames.length;
 
   function renderRow(props) {
     const { index, style } = props;
 
     function chooseNode() {
+      // это нужно чтобы выбрать конкретную часть модели
       //console.log(materialNames[index])
-      setNode(materialNames[index])
+      //setNode(materialNames[index]);
     }
 
     return (
@@ -46,7 +47,7 @@ export default function InfoList({ materialNames, listName, setNode }) {
 
   return (
     <List
-      sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+      sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
       component="nav"
       aria-labelledby="nested-list-subheader"
       // subheader={
@@ -70,8 +71,8 @@ export default function InfoList({ materialNames, listName, setNode }) {
           itemCount={itemsCount}
           overscanCount={1}
         >
-        {renderRow}
-      </FixedSizeList>
+          {renderRow}
+        </FixedSizeList>
       </Collapse>
     </List>
   );
